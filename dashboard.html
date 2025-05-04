@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Dashboard - Khan Academy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">Khan Academy</a>
+        </div>
+        <div class="nav-links">
+            <a href="courses.html">Courses</a>
+            <a href="ai-tutor.html">AI Tutor</a>
+            <a href="voice-lessons.html">Voice Lessons</a>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <button class="login-btn" onclick="location.href='login.html'">Log in</button>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="dashboard-container">
+            <!-- Main Content Section -->
+            <div class="main-content">
+                <!-- Progress Section -->
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <h2>Your Progress</h2>
+                        <div class="level-display">Level <span id="userLevel">1</span></div>
+                    </div>
+                    <div class="progress-stats">
+                        <div class="stat-card">
+                            <h3>Total Points</h3>
+                            <div class="stat-value" id="totalPoints">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Streak Days</h3>
+                            <div class="stat-value" id="streakDays">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Completed Lessons</h3>
+                            <div class="stat-value" id="completedLessons">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="quiz-container" id="quizContainer" style="display: none;">
+                    <div class="quiz-header">
+                        <h2>AI-Generated Quiz</h2>
+                        <div class="quiz-progress">
+                            Question <span id="currentQuestion">1</span>/<span id="totalQuestions">5</span>
+                        </div>
+                    </div>
+                    <div class="quiz-content">
+                        <div class="quiz-question" id="questionText"></div>
+                        <div class="quiz-options" id="optionsContainer"></div>
+                        <div class="quiz-feedback" id="feedback"></div>
+                        <button class="next-btn" id="nextQuestion" style="display: none;">Next Question</button>
+                    </div>
+                </div>
+
+                <!-- Badges Section -->
+                <div class="badges-section">
+                    <h2>Your Badges</h2>
+                    <div class="badges-container" id="badgesContainer">
+                        <!-- Badges will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Leaderboard Section -->
+                <div class="leaderboard-section">
+                    <div class="leaderboard-header">
+                        <h2>Leaderboard</h2>
+                        <select id="leaderboardFilter">
+                            <option value="all">All Time</option>
+                            <option value="weekly">This Week</option>
+                            <option value="monthly">This Month</option>
+                        </select>
+                    </div>
+                    <ul class="leaderboard-list" id="leaderboardList">
+                        <!-- Leaderboard entries will be dynamically added here -->
+                    </ul>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="startQuiz()">Take a Quiz</button>
+                    <button class="action-btn" onclick="location.href='voice-lessons.html'">Start Voice Lesson</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Khan Academy Clone. Created for educational purposes.</p>
+    </footer>
+
+    <script src="quiz-generator.js"></script>
+    <script src="learning-dashboard.js"></script>
+    <script>
+        // Initialize dashboard with a sample user ID
+        const dashboard = new LearningDashboard('user123');
+        const quizGenerator = new QuizGenerator();
+
+        // Update dashboard UI
+        function updateDashboard() {
+            document.getElementById('userLevel').textContent = dashboard.progress.level;
+            document.getElementById('totalPoints').textContent = dashboard.progress.totalPoints;
+            document.getElementById('streakDays').textContent = dashboard.progress.streakDays;
+            document.getElementById('completedLessons').textContent = dashboard.progress.completedLessons.length;
+            
+            // Update badges
+            const badgesContainer = document.getElementById('badgesContainer');
+            badgesContainer.innerHTML = '';
+            
+            dashboard.badges.available.forEach(badge => {
+                const isEarned = dashboard.badges.earned.some(earned => earned.id === badge.id);
+                const badgeCard = document.createElement('div');
+                badgeCard.className = `badge-card ${isEarned ? '' : 'badge-locked'}`;
+                badgeCard.innerHTML = `
+                    <div class="badge-icon">${badge.icon}</div>
+                    <h3>${badge.name}</h3>
+                    <p>${badge.description}</p>
+                `;
+                badgesContainer.appendChild(badgeCard);
+            });
+            
+            // Update leaderboard
+            const leaderboardList = document.getElementById('leaderboardList');
+            leaderboardList.innerHTML = '';
+            
+            dashboard.leaderboard.slice(0, 10).forEach((entry, index) => {
+                const li = document.createElement('li');
+                li.className = 'leaderboard-item';
+                li.innerHTML = `
+                    <div class="leaderboard-rank">${index + 1}</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">User ${entry.userId}</div>
+                        <div class="leaderboard-points">${entry.points} points</div>
+                    </div>
+                `;
+                leaderboardList.appendChild(li);
+            });
+        }
+        
+        // Start a quiz
+        function startQuiz() {
+            const quizContainer = document.getElementById('quizContainer');
+            const questions = quizGenerator.generateQuiz('algebra', 'medium', 5);
+            let currentQuestionIndex = 0;
+            
+            function showQuestion(index) {
+                const question = questions[index];
+                document.getElementById('currentQuestion').textContent = index + 1;
+                document.getElementById('totalQuestions').textContent = questions.length;
+                document.getElementById('questionText').textContent = question.question;
+                
+                const optionsContainer = document.getElementById('optionsContainer');
+                optionsContainer.innerHTML = '';
+                
+                if (question.type === 'multiple-choice') {
+                    question.options.forEach(option => {
+                        const button = document.createElement('button');
+                        button.className = 'quiz-option';
+                        button.textContent = option;
+                        button.onclick = () => checkAnswer(option);
+                        optionsContainer.appendChild(button);
+                    });
+                } else if (question.type === 'fill-in-blank') {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'quiz-input';
+                    input.placeholder = 'Enter your answer';
+                    const submitBtn = document.createElement('button');
+                    submitBtn.className = 'quiz-submit';
+                    submitBtn.textContent = 'Submit';
+                    submitBtn.onclick = () => checkAnswer(input.value);
+                    optionsContainer.appendChild(input);
+                    optionsContainer.appendChild(submitBtn);
+                }
+            }
+            
+            function checkAnswer(userAnswer) {
+                const question = questions[currentQuestionIndex];
+                const result = quizGenerator.checkAnswer(question, userAnswer);
+                const feedback = document.getElementById('feedback');
+                
+                feedback.className = `quiz-feedback ${result.correct ? 'correct' : 'incorrect'}`;
+                feedback.innerHTML = `
+                    <p>${result.correct ? 'Correct!' : 'Incorrect.'}</p>
+                    <p>${result.explanation}</p>
+                `;
+                feedback.style.display = 'block';
+                
+                // Update points
+                if (result.correct) {
+                    dashboard.updateProgress(result.points);
+                    updateDashboard();
+                }
+                
+                // Show next button or end quiz
+                const nextBtn = document.getElementById('nextQuestion');
+                nextBtn.style.display = 'block';
+                nextBtn.onclick = () => {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < questions.length) {
+                        showQuestion(currentQuestionIndex);
+                        feedback.style.display = 'none';
+                        nextBtn.style.display = 'none';
+                    } else {
+                        quizContainer.style.display = 'none';
+                        alert('Quiz completed! Check your updated progress.');
+                    }
+                };
+            }
+            
+            // Start the quiz
+            quizContainer.style.display = 'block';
+            showQuestion(currentQuestionIndex);
+        }
+        
+        // Initial dashboard update
+        updateDashboard();
+    </script>
+</body>
+</html> 

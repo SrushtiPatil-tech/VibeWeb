@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Khan Academy Clone</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">Khan Academy</a>
+        </div>
+        <div class="nav-links">
+            <a href="courses.html">Courses</a>
+            <a href="ai-tutor.html">AI Tutor</a>
+            <a href="voice-lessons.html">Voice Lessons</a>
+            <a href="dashboard.html">Dashboard</a>
+            <button class="login-btn active" onclick="location.href='login.html'">Log in</button>
+        </div>
+    </nav>
+
+    <div class="login-container">
+        <h1>Log In</h1>
+        <form class="login-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="login-submit-btn">Log In</button>
+        </form>
+        <p class="signup-link">Don't have an account? <a href="#">Sign up</a></p>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Khan Academy Clone. Created for educational purposes.</p>
+    </footer>
+</body>
+</html> 

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Lessons - Khan Academy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">Khan Academy</a>
+        </div>
+        <div class="nav-links">
+            <a href="courses.html">Courses</a>
+            <a href="ai-tutor.html">AI Tutor</a>
+            <a href="voice-lessons.html" class="active">Voice Lessons</a>
+            <a href="dashboard.html">Dashboard</a>
+            <button class="login-btn" onclick="location.href='login.html'">Log in</button>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="voice-control-container">
+            <h1>Voice-Controlled Lessons</h1>
+            <p>Learn hands-free with our voice control technology.</p>
+            
+            <div class="voice-demo">
+                <button class="mic-button" id="micButton">
+                    <span class="mic-icon">🎤</span>
+                    <span class="mic-text">Start Voice Control</span>
+                </button>
+                <div class="voice-status" id="voiceStatus">Click to start voice commands</div>
+            </div>
+
+            <!-- Lesson Container -->
+            <div class="lesson-container" id="lessonContainer" style="display: none;">
+                <div class="lesson-header">
+                    <h2>Algebra Lesson: Introduction to Variables</h2>
+                    <div class="lesson-stats">
+                        <div class="progress-bar">
+                            <div class="progress" id="lessonProgress"></div>
+                        </div>
+                        <div class="lesson-progress">
+                            <span id="currentSlide">1</span>/<span id="totalSlides">5</span>
+                        </div>
+                        <div class="points-counter">
+                            Points: <span id="pointsEarned">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lesson-slides">
+                    <div class="slide" data-slide="1">
+                        <div class="slide-content">
+                            <h3>What are Variables?</h3>
+                            <p>Variables are symbols (usually letters) that represent numbers or other mathematical objects.</p>
+                            <div class="interactive-demo">
+                                <div class="variable-box" draggable="true" data-value="x">x</div>
+                                <div class="variable-box" draggable="true" data-value="y">y</div>
+                                <div class="equation-builder">
+                                    <div class="dropzone">Drag variables here: __ + 5 = 12</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slide" data-slide="2" style="display: none;">
+                        <div class="slide-content">
+                            <h3>Using Variables</h3>
+                            <p>We use variables to solve problems where some values are unknown.</p>
+                            <div class="interactive-quiz">
+                                <p class="question">What does x equal in: x + 5 = 12?</p>
+                                <div class="options">
+                                    <button class="option" data-correct="false">5</button>
+                                    <button class="option" data-correct="true">7</button>
+                                    <button class="option" data-correct="false">12</button>
+                                    <button class="option" data-correct="false">17</button>
+                                </div>
+                                <div class="feedback" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slide" data-slide="3" style="display: none;">
+                        <div class="slide-content">
+                            <h3>Solving Step by Step</h3>
+                            <div class="interactive-steps">
+                                <div class="step" data-step="1">
+                                    <span class="step-number">1</span>
+                                    <div class="step-content">x + 5 = 12</div>
+                                </div>
+                                <div class="step" data-step="2">
+                                    <span class="step-number">2</span>
+                                    <div class="step-content">x = 12 - 5</div>
+                                </div>
+                                <div class="step" data-step="3">
+                                    <span class="step-number">3</span>
+                                    <div class="step-content">x = 7</div>
+                                </div>
+                                <button class="animate-steps">Watch Solution</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slide" data-slide="4" style="display: none;">
+                        <div class="slide-content">
+                            <h3>Practice Problem</h3>
+                            <div class="interactive-practice">
+                                <p>Solve: y - 3 = 8</p>
+                                <div class="solution-steps">
+                                    <input type="number" class="step-input" placeholder="Enter y value">
+                                    <button class="check-answer">Check Answer</button>
+                                </div>
+                                <div class="practice-feedback"></div>
+                                <div class="hint-system">
+                                    <button class="hint-btn">Need a hint?</button>
+                                    <div class="hints" style="display: none;">
+                                        <p>1. Add 3 to both sides</p>
+                                        <p>2. y = 8 + 3</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slide" data-slide="5" style="display: none;">
+                        <div class="slide-content">
+                            <h3>Final Challenge</h3>
+                            <div class="challenge-section">
+                                <div class="equation-matcher">
+                                    <p>Match each equation with its solution:</p>
+                                    <div class="matching-game">
+                                        <div class="equation" draggable="true" data-pair="1">x + 2 = 9</div>
+                                        <div class="solution" data-pair="1">x = 7</div>
+                                        <div class="equation" draggable="true" data-pair="2">y - 5 = 10</div>
+                                        <div class="solution" data-pair="2">y = 15</div>
+                                    </div>
+                                </div>
+                                <button class="complete-lesson">Complete Lesson</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lesson-controls">
+                    <button id="prevSlide" disabled>Previous</button>
+                    <button id="nextSlide">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Suggestions Section -->
+    <div class="video-suggestions" id="videoSuggestions" style="display: none;">
+        <h2>Suggested Videos</h2>
+        <div class="video-grid" id="videoGrid">
+            <!-- Videos will be dynamically added here -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Khan Academy Clone. Created for educational purposes.</p>
+    </footer>
+
+    <script src="voice-control.js"></script>
+    <script src="video-suggestions.js"></script>
+</body>
+</html> 

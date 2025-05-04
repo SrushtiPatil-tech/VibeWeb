@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Learning Lab - Khan Academy</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- AR.js and Three.js for AR features -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.0/build/three.min.js"></script>
+    <style>
+        .ar-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .ar-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .ar-category {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .ar-category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .ar-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .ar-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .close-ar-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            padding: 10px 20px;
+            background: #14BF96;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .ar-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            display: flex;
+            gap: 10px;
+        }
+
+        .ar-controls button {
+            padding: 10px 20px;
+            background: #14BF96;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .model-info {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 300px;
+            z-index: 1001;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">Khan Academy</a>
+        </div>
+        <div class="nav-links">
+            <a href="courses.html">Courses</a>
+            <a href="ai-tutor.html">AI Tutor</a>
+            <a href="voice-lessons.html">Voice Lessons</a>
+            <a href="dashboard.html">Dashboard</a>
+            <button class="login-btn" onclick="location.href='login.html'">Log in</button>
+        </div>
+    </nav>
+
+    <div class="ar-container">
+        <h1>AR Learning Lab</h1>
+        <p>Experience interactive learning through augmented reality. Point your camera at a flat surface to begin.</p>
+        
+        <div class="ar-categories">
+            <div class="ar-category" onclick="startARSession('geometry')">
+                <div class="ar-icon">📐</div>
+                <h3>Geometric Shapes</h3>
+                <p>Explore 3D geometry concepts including:</p>
+                <ul>
+                    <li>Platonic solids</li>
+                    <li>Complex polyhedra</li>
+                    <li>Cross-sections</li>
+                </ul>
+            </div>
+            
+            <div class="ar-category" onclick="startARSession('chemistry')">
+                <div class="ar-icon">⚗️</div>
+                <h3>Molecular Structures</h3>
+                <p>Visualize chemical compounds including:</p>
+                <ul>
+                    <li>Atomic structures</li>
+                    <li>Chemical bonds</li>
+                    <li>Molecular geometry</li>
+                </ul>
+            </div>
+            
+            <div class="ar-category" onclick="startARSession('physics')">
+                <div class="ar-icon">🔭</div>
+                <h3>Physics Lab</h3>
+                <p>Interactive experiments including:</p>
+                <ul>
+                    <li>Force and motion</li>
+                    <li>Wave propagation</li>
+                    <li>Electric fields</li>
+                </ul>
+            </div>
+            
+            <div class="ar-category" onclick="startARSession('biology')">
+                <div class="ar-icon">🧬</div>
+                <h3>Human Anatomy</h3>
+                <p>Explore body systems including:</p>
+                <ul>
+                    <li>Skeletal system</li>
+                    <li>Circulatory system</li>
+                    <li>Nervous system</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- AR Viewer -->
+    <div id="ar-viewer" class="ar-viewer">
+        <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+            <a-marker preset="hiro">
+                <a-entity id="ar-model" position="0 0 0"></a-entity>
+            </a-marker>
+            <a-entity camera></a-entity>
+        </a-scene>
+        
+        <button class="close-ar-btn" onclick="closeARViewer()">Close AR View</button>
+        
+        <div class="ar-controls">
+            <button onclick="rotateModel('left')">Rotate Left</button>
+            <button onclick="scaleModel('up')">Scale Up</button>
+            <button onclick="scaleModel('down')">Scale Down</button>
+            <button onclick="rotateModel('right')">Rotate Right</button>
+        </div>
+        
+        <div class="model-info" id="modelInfo">
+            <h3>Model Information</h3>
+            <p id="modelDescription"></p>
+        </div>
+    </div>
+
+    <script src="ar-learning.js"></script>
+</body>
+</html> 
